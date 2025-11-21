@@ -18,9 +18,9 @@ struct Flight{
     int economy;
     int luxury;
     int ep;
+    int lp;
     int seats_left;
     int seats_occupied;
-    int lp;
 };
 struct customer{
     char name[30];
