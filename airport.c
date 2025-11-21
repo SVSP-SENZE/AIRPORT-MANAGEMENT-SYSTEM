@@ -7,7 +7,10 @@ struct Pilot{
     int experience;
 };
 struct Flight{
-    char type[30];
+    char id[10];
+    char airline[30];
+    char start[20];
+    char destination[20];
     int seats;
     int economy;
     int luxury;
