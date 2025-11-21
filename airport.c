@@ -28,6 +28,10 @@ struct customer{
     char password[30];
     long long phone;
 };
+struct booking{
+    char username[30];
+    char flight_id[10];
+    int seat_number;}
 int main(){
     printf("===========================================\n");
     printf("            IIITB AIRPORT                   \n");
