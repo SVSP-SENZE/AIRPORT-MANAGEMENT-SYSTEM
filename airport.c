@@ -13,7 +13,7 @@ struct Flight{
     char destination[20];
     char date[10];
     char time[10];
-    char duration[10];
+    char duration[20];
     int seats;
     int economy;
     int luxury;
