@@ -11,10 +11,15 @@ struct Flight{
     char airline[30];
     char start[20];
     char destination[20];
+    char date[10];
+    char time[10];
+    char duration[3];
     int seats;
     int economy;
     int luxury;
     int ep;
+    int seats_left;
+    int seats_occupied;
     int lp;
 };
 struct customer{
