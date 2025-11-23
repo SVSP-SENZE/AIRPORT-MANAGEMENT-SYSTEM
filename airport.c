@@ -27,7 +27,31 @@ struct Admins{
     char name[30];
     char password[10];
 };
+void cancel(name){
+    FILE *f=fopen("bookings.txt","r");
+    FILE *t=fopen("t.txt","w");
+    char n[30];char id[20];
+    int p;int c=0;
+      while (fscanf(f, "%s %s %d",n,id,&p)!=EOF) {
+        if (strcmp(n,name) ==0) {
+            c=1;
+            printf("Flight tickets for flight id: %s cancelled\n",id);
+        } else {
+            fprintf(t, "%s %s %d\n",n,id,p);
+        }
+    }
 
+    fclose(f);
+    fclose(t);
+
+    remove("bookings.txt");
+    rename("temp.txt", "bookings.txt");
+
+    if (!c)
+        printf("No such ticket found to cancel\n");
+
+     
+}
 int check(char *name, char *pass){
     FILE *f = fopen("customerdata.txt", "r");
     if(!f) return 0;
@@ -137,6 +161,9 @@ void customer_dashboard(char *name){
         else if(choice == 1){
             book_ticket(name);
         }
+        else if(choice ==2){
+            cancel(name);
+        }
     }
 }
 
@@ -211,4 +238,3 @@ int main(){
         }
     }
 }
-
