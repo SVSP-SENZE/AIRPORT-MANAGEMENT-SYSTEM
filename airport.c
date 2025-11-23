@@ -100,7 +100,7 @@ void edit(){
     scanf("%d",&p->eprice);
     printf("Enter new luxury price: ");
     scanf("%d",&p->lprice);
-    save_flights();
+    save_flight();
     printf("Flight details updated\n");
 
 }
@@ -119,24 +119,33 @@ void add_flight(){
     scanf("%d", &p->lprice);
     p->next = head;
     head = p;
-    save_flights();
+    save_flight();
     printf("New flight details added\n");
 }
 int check(char *name, char *pass){
-    FILE *f = fopen("customerdata.txt", "r");
+      FILE *f = fopen("customerdata.txt", "r");
     if(!f) return 0;
 
     char name2[30], pass2[30];
     int age;
     long long ph;
+    char line[200];
 
-    while(fscanf(f,
-        "Name: %s\nAge: %d\nPhone: %lld\nPassword: %s\n---------------------\n",
-        name2, &age, &ph, pass2) == 4)
-    {
-        if(strcmp(name2, name)==0 && strcmp(pass2, pass)==0){
-            fclose(f);
-            return 1;
+    while(fgets(line, sizeof(line), f)){
+        if(sscanf(line, "Name: %s", name2) == 1 &&
+           fgets(line, sizeof(line), f) &&
+           sscanf(line, "Age: %d", &age) == 1 &&
+           fgets(line, sizeof(line), f) &&
+           sscanf(line, "Phone: %lld", &ph) == 1 &&
+           fgets(line, sizeof(line), f) &&
+           sscanf(line, "Password: %s", pass2) == 1)
+        {
+            fgets(line, sizeof(line), f);
+
+            if(strcmp(name2, name)==0 && strcmp(pass2, pass)==0){
+                fclose(f);
+                return 1;
+            }
         }
     }
 
@@ -286,7 +295,7 @@ void admin_dashboard(){
         return;
     }
     while(1){
-        printf("****ADMIN COMMANDS****");
+        printf("****ADMIN COMMANDS****\n");
         printf("1.Add flights\n2.View flights\n3.Edit flights\n4.Homescreen\nEnter option: ");
         int o;
         scanf("%d",&o);
@@ -298,7 +307,7 @@ void admin_dashboard(){
             return;
         }
         else if(o==1){
-            add_flights();
+            add_flight();
         }
         else if(o==3){
             edit();
