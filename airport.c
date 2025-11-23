@@ -27,7 +27,7 @@ struct Admins{
     char name[30];
     char password[10];
 };
-void cancel(name){
+void cancel(char name[]){
     FILE *f=fopen("bookings.txt","r");
     FILE *t=fopen("t.txt","w");
     char n[30];char id[20];
@@ -45,12 +45,82 @@ void cancel(name){
     fclose(t);
 
     remove("bookings.txt");
-    rename("temp.txt", "bookings.txt");
+    rename("t.txt", "bookings.txt");
 
     if (!c)
         printf("No such ticket found to cancel\n");
 
      
+}
+void load_flights(){
+    FILE *f = fopen("flights.txt","r");
+    if(!f) return;
+
+    struct Flight *p;
+    while(1){
+        p = (struct Flight*)malloc(sizeof(struct Flight));
+        if(fscanf(f, "%s %s %s %d %d",
+            p->id, p->type, p->dest, &p->eprice, &p->lprice) != 5){
+            free(p);
+            break;
+        }
+        p->next = head;
+        head = p;
+    }
+    fclose(f);
+}
+void save_flight(){
+    FILE *f = fopen("flights.txt","w");
+    struct Flight *p = head;
+    while(p){
+        fprintf(f, "%s %s %s %d %d\n",p->id, p->type, p->dest, p->eprice, p->lprice);
+        p = p->next;
+    }
+    fclose(f);
+}
+void edit(){
+    char id[20];
+    printf("Enter flight ID to edit: ");
+    scanf("%s",id);
+
+    struct Flight *p = head;
+    while(p&&strcmp(p->id,id)!=0)
+        p = p->next;
+
+    if(!p){
+        printf("No such flight exists\n");
+        return;
+    }
+
+    printf("Enter new aircraft: ");
+    scanf("%s",p->type);
+    printf("Enter new destination: ");
+    scanf("%s",p->dest);
+    printf("Enter new economy price: ");
+    scanf("%d",&p->eprice);
+    printf("Enter new luxury price: ");
+    scanf("%d",&p->lprice);
+    save_flights();
+    printf("Flight details updated\n");
+
+}
+void add_flight(){
+    struct Flight *p = (struct Flight*)malloc(sizeof(struct Flight));
+
+    printf("Enter flight id: ");
+    scanf("%s", p->id);
+    printf("Enter aircraft: ");
+    scanf("%s", p->type);
+    printf("Enter destination: ");
+    scanf("%s", p->dest);
+    printf("Enter economy price: ");
+    scanf("%d", &p->eprice);
+    printf("Enter luxury price: ");
+    scanf("%d", &p->lprice);
+    p->next = head;
+    head = p;
+    save_flights();
+    printf("New flight details added\n");
 }
 int check(char *name, char *pass){
     FILE *f = fopen("customerdata.txt", "r");
@@ -207,13 +277,43 @@ void customer_menu(){
         }
     }
 }
+void admin_dashboard(){
+    printf("Enter admin code: \n");
+    char c[20];
+    scanf("%s",c);
+    if(strcmp("omkarsidshubhan",c)!=0){
+        printf("WRONG CODE!\n");
+        return;
+    }
+    while(1){
+        printf("****ADMIN COMMANDS****");
+        printf("1.Add flights\n2.View flights\n3.Edit flights\n4.Homescreen\nEnter option: ");
+        int o;
+        scanf("%d",&o);
+        if(o==2){
+            view_flights();
+        }
+        else if(o==4){
+            printf("Going back...\n");
+            return;
+        }
+        else if(o==1){
+            add_flights();
+        }
+        else if(o==3){
+            edit();
+        }
+        else{
+            printf("Invalid option\n");
+        }
+}}
 
 int main(){
     printf("===========================================\n");
     printf("            IIITB AIRPORT                   \n");
     printf("              WELCOME!                      \n");
     printf("============================================\n");
-
+    load_flights();
     printf("Choose an option: \n");
     printf("1.Continue as Customer\n");
     printf("2.Continue as Admin\n");
@@ -235,6 +335,9 @@ int main(){
         }
         else if(choice == 3){
             view_flights();
+        }
+        else if(choice ==2){
+            admin_dashboard();       
         }
     }
 }
