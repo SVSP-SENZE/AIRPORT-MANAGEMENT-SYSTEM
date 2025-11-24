@@ -9,6 +9,7 @@ struct Pilot{
     char experience[10];
     int age;
     char airline[20];
+    struct Pilot* next;
 };
 
 struct Flight{
@@ -17,16 +18,136 @@ struct Flight{
     int eprice;
     int lprice;
     char dest[20];
+    char pilot[30];
     struct Flight *next;
 };
 
 struct Flight *head = NULL;
-
+struct Pilot *phead=NULL;
 struct Admins{
     char id[10];
     char name[30];
     char password[10];
 };
+void assign_pilot(){
+    char fid[10], pid[10];
+    printf("Enter Flight ID: ");
+    scanf("%s", fid);
+    printf("Enter Pilot ID: ");
+    scanf("%s", pid);
+
+    struct Flight *f = head;
+    while(f && strcmp(f->id, fid) != 0)
+        f = f->next;
+
+    if(!f){
+        printf("Flight not in database\n");
+        return;
+    }
+
+    struct Pilot *p = phead;
+    while(p && strcmp(p->id, pid) != 0)
+        p = p->next;
+
+    if(!p){
+        printf("Pilot not in database\n");
+        return;
+    }
+
+    strcpy(f->pilot, p->name);
+    save_flight();
+    printf("Pilot %s has been assigned to flight %s\n", p->name, fid);
+}
+void load_pilots(){
+    FILE *f=fopen("pilots.txt","r");
+    if(!f) return;
+    struct Pilot *p;
+    while(1){
+        p=(struct Pilot*)malloc(sizeof(struct Pilot));
+        if(fscanf(f,"%s %s %s %s %d %s",
+                  p->id,p->name,p->gender,p->experience,&p->age,p->airline)!=6){
+            free(p);
+            break;
+        }
+        p->next=phead;
+        phead=p;
+    }
+    fclose(f);
+}
+void savepilot(){
+    FILE *f=fopen("pilots.txt","w");
+    struct Pilot *p=phead;
+    while(p){
+        fprintf(f,"%s %s %s %s %d %s\n",
+                p->id,p->name,p->gender,p->experience,p->age,p->airline);
+        p=p->next;
+    }
+    fclose(f);
+}
+void addpilot(){
+    struct Pilot *p=(struct Pilot*)malloc(sizeof(struct Pilot));
+
+    printf("Enter pilot id: ");
+    scanf("%s",p->id);
+    printf("Enter name: ");
+    scanf("%s",p->name);
+    printf("Enter gender: ");
+    scanf("%s",p->gender);
+    printf("Enter experience: ");
+    scanf("%s",p->experience);
+    printf("Enter age: ");
+    scanf("%d",&p->age);
+    printf("Enter airline: ");
+    scanf("%s",p->airline);
+
+    p->next=phead;
+    phead=p;
+    savepilot();
+    printf("New pilot added\n");
+
+}
+void view_pilots(){
+    struct Pilot *p=phead;
+    printf("***PILOT INFORMATION LOG***\n");
+    while(p){
+        printf("ID: %s\n",p->id);
+        printf("Name: %s\n",p->name);
+        printf("Gender: %s\n",p->gender);
+        printf("Experience: %s\n",p->experience);
+        printf("Age: %d\n",p->age);
+        printf("Airline: %s\n",p->airline);
+        printf("-------------------\n");
+        p=p->next;
+    }
+}
+void editpilot(){
+       char id[10];
+    printf("Enter pilot ID to edit: ");
+    scanf("%s",id);
+
+    struct Pilot *p=phead;
+    while(p && strcmp(p->id,id)!=0)
+        p=p->next;
+
+    if(!p){
+        printf("No such pilot exists\n");
+        return;
+    }
+
+    printf("Enter new name: ");
+    scanf("%s",p->name);
+    printf("Enter new gender: ");
+    scanf("%s",p->gender);
+    printf("Enter new experience: ");
+    scanf("%s",p->experience);
+    printf("Enter new age: ");
+    scanf("%d",&p->age);
+    printf("Enter new airline: ");
+    scanf("%s",p->airline);
+
+    savepilot();
+    printf("Pilot details updated\n");
+}
 void cancel(char name[]){
     FILE *f=fopen("bookings.txt","r");
     FILE *t=fopen("t.txt","w");
@@ -59,8 +180,8 @@ void load_flights(){
     struct Flight *p;
     while(1){
         p = (struct Flight*)malloc(sizeof(struct Flight));
-        if(fscanf(f, "%s %s %s %d %d",
-            p->id, p->type, p->dest, &p->eprice, &p->lprice) != 5){
+        if(fscanf(f, "%s %s %s %d %d %s",
+            p->id, p->type, p->dest, &p->eprice, &p->lprice,p->pilot) != 6){
             free(p);
             break;
         }
@@ -73,7 +194,7 @@ void save_flight(){
     FILE *f = fopen("flights.txt","w");
     struct Flight *p = head;
     while(p){
-        fprintf(f, "%s %s %s %d %d\n",p->id, p->type, p->dest, p->eprice, p->lprice);
+        fprintf(f, "%s %s %s %d %d %s\n",p->id, p->type, p->dest, p->eprice, p->lprice,p->pilot);
         p = p->next;
     }
     fclose(f);
@@ -296,7 +417,7 @@ void admin_dashboard(){
     }
     while(1){
         printf("****ADMIN COMMANDS****\n");
-        printf("1.Add flights\n2.View flights\n3.Edit flights\n4.Homescreen\nEnter option: ");
+        printf("1.Add flights\n2.View flights\n3.Edit flights\n4.Homescreen\n5.Add pilots\n6.View pilots\n7.Edit pilots\n8.Assign pilot to a flight\nEnter option: ");
         int o;
         scanf("%d",&o);
         if(o==2){
@@ -312,6 +433,18 @@ void admin_dashboard(){
         else if(o==3){
             edit();
         }
+        else if(o==5){
+            addpilot();
+        }
+        else if(o==6){
+            view_pilots();
+        }
+        else if(o==7){
+            editpilot();
+        }
+        else if(o==8){
+            assign_pilot();
+        }
         else{
             printf("Invalid option\n");
         }
@@ -323,6 +456,7 @@ int main(){
     printf("              WELCOME!                      \n");
     printf("============================================\n");
     load_flights();
+    load_pilots();
     printf("Choose an option: \n");
     printf("1.Continue as Customer\n");
     printf("2.Continue as Admin\n");
