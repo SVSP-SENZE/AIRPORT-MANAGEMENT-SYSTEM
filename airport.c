@@ -91,7 +91,7 @@ void addpilot(){
     scanf("%s",p->id);
     printf("Enter name: ");
     scanf("%s",p->name);
-    printf("Enter gender: ");
+    printf("Enter gender(M/F): ");
     scanf("%s",p->gender);
     printf("Enter experience: ");
     scanf("%s",p->experience);
@@ -136,7 +136,7 @@ void editpilot(){
 
     printf("Enter new name: ");
     scanf("%s",p->name);
-    printf("Enter new gender: ");
+    printf("Enter new gender(M/F): ");
     scanf("%s",p->gender);
     printf("Enter new experience: ");
     scanf("%s",p->experience);
@@ -238,6 +238,7 @@ void add_flight(){
     scanf("%d", &p->eprice);
     printf("Enter luxury price: ");
     scanf("%d", &p->lprice);
+    strcpy(p->pilot, "NONE");
     p->next = head;
     head = p;
     save_flight();
@@ -292,7 +293,7 @@ void view_flights(){
 void book_ticket(char name[30]){
     char id[10];
     int c;
-
+    view_flights();
     printf("Enter flight id you want to book: \n");
     scanf("%s", id);
 
