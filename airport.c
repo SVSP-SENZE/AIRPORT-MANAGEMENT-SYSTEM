@@ -457,15 +457,13 @@ int main(){
     printf("============================================\n");
     load_flights();
     load_pilots();
-    printf("Choose an option: \n");
-    printf("1.Continue as Customer\n");
-    printf("2.Continue as Admin\n");
-    printf("3.View flights\n");
-    printf("4.Exit application\n");
-
     int choice;
-
     while(1){
+        printf("Choose an option: \n");
+        printf("1.Continue as Customer\n");
+        printf("2.Continue as Admin\n");
+        printf("3.View flights\n");
+        printf("4.Exit application\n");
         printf("enter choice: ");
         scanf("%d", &choice);
 
