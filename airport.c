@@ -93,7 +93,7 @@ void addpilot(){
     scanf("%s",p->name);
     printf("Enter gender(M/F): ");
     scanf("%s",p->gender);
-    printf("Enter experience: ");
+    printf("Enter experience(in years): ");
     scanf("%s",p->experience);
     printf("Enter age: ");
     scanf("%d",&p->age);
@@ -138,7 +138,7 @@ void editpilot(){
     scanf("%s",p->name);
     printf("Enter new gender(M/F): ");
     scanf("%s",p->gender);
-    printf("Enter new experience: ");
+    printf("Enter new experience(in years): ");
     scanf("%s",p->experience);
     printf("Enter new age: ");
     scanf("%d",&p->age);
