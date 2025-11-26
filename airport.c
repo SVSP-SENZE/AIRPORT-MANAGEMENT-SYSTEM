@@ -108,7 +108,7 @@ void addpilot(){
 }
 void view_pilots(){
     struct Pilot *p=phead;
-    printf("***PILOT INFORMATION LOG***\n");
+    printf(\n"***PILOT INFORMATION LOG***\n");
     while(p){
         printf("ID: %s\n",p->id);
         printf("Name: %s\n",p->name);
@@ -278,7 +278,7 @@ int check(char *name, char *pass){
 void view_flights(){
     struct Flight *p = head;
 
-    printf("***AVAILABLE FLIGHTS***\n");
+    printf(\n"***AVAILABLE FLIGHTS***\n");
     while(p != NULL){
         printf("\nFlight ID: %s\n", p->id);
         printf("Aircraft: %s\n", p->type);
@@ -319,7 +319,7 @@ void book_ticket(char name[30]){
 }
 
 void customer_login(){
-    printf("****NEW CUSTOMER LOGIN!****\n");
+    printf(\n"****NEW CUSTOMER LOGIN!****\n");
 
     char name[30];
     int age;
@@ -417,7 +417,7 @@ void admin_dashboard(){
         return;
     }
     while(1){
-        printf("****ADMIN COMMANDS****\n");
+        printf(\n"****ADMIN COMMANDS****\n");
         printf("1.Add flights\n2.View flights\n3.Edit flights\n4.Homescreen\n5.Add pilots\n6.View pilots\n7.Edit pilots\n8.Assign pilot to a flight\nEnter option: ");
         int o;
         scanf("%d",&o);
@@ -460,7 +460,7 @@ int main(){
     load_pilots();
     int choice;
     while(1){
-        printf("Choose an option: \n");
+        printf("\nChoose an option: \n");
         printf("1.Continue as Customer\n");
         printf("2.Continue as Admin\n");
         printf("3.View flights\n");
