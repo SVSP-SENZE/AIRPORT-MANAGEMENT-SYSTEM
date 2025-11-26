@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+void save_flight();
 struct Pilot{
     char id[5];
     char name[30];
